@@ -31,6 +31,12 @@ SPDX-License-Identifier: MIT
 
 /* === Private data type declarations ============================================================================== */
 
+struct Alumno{
+    char nombre[50];
+    char apellido[50];
+    int documento;
+};
+
 /* === Private function declarations =============================================================================== */
 
 /**
@@ -71,7 +77,18 @@ static int SerializarNumero(const char * clave, int valor, char * salida) {
 
 /* === Public function implementation ============================================================================== */
 
-int Serializar(const Alumno * a, char * salida, int tam) {
+alumno_t CrearAlumno(char * nombre, char * apellido, int documento){
+    alumno_t a = malloc(sizeof(struct Alumno));
+    if (a != NULL) {
+        a->documento = documento;
+        strncpy(a->nombre, nombre, sizeof(a->nombre) - 1);
+        strncpy(a->apellido, apellido, sizeof(a->apellido) - 1);
+    }
+    return a;
+}
+
+
+int Serializar(alumno_t a, char * salida, int tam) {
     char buffer[256];
     int total = 0;
 

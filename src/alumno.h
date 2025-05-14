@@ -42,25 +42,33 @@ extern "C" {
  *
  */
 
-typedef struct {
-    char nombre[50];   //!< Nombre del alumno
-    char apellido[50]; //!< Apellido del alumno
-    int documento;     //!< Documento del alumno
-} Alumno;
+typedef struct Alumno *alumno_t;
 
 /* === Public variable declarations ================================================================================ */
 
 /* === Public function declarations ================================================================================ */
 
 /**
+ * @brief es un metodo de la clase ALUMNO para crear el objeto alumno.
+ * 
+ * @param nombre Cadena con el nombre del alumno a crear
+ * @param apellido Cadena con el apellido del alumno a crear
+ * @param documento Documento del alumno a crear
+ * @return alumno_t Retorna un puntero a la estructura de datos asignada para almacenar los datos del nuevo 
+alumno creado
+ */
+
+alumno_t CrearAlumno(char * nombre, char * apellido, int documento);
+
+/**
  * @brief Funcion para serializar los datos de un alumno a formato JSON.
  *
- * @param a Puntero constante al alumno
+ * @param a Referencia al objeto Alumno a serializar
  * @param salida Buffer donde se escribe el JSON generado
  * @param tam Tamaño máximo del buffer de salida
  * @return int Longitud de la cadena generada o -1 si no hay suficiente espacio
  */
-int Serializar(const Alumno * a, char * salida, int tam);
+int Serializar( alumno_t a, char * salida, int tam);
 
 /* === End of conditional blocks =================================================================================== */
 

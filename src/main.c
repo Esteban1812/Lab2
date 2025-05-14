@@ -42,10 +42,11 @@ SPDX-License-Identifier: MIT
 /* === Public function implementation ============================================================================== */
 
 int main(void) {
-    Alumno alumno = {.nombre = "Esteban", .apellido = "Lobo", .documento = 43648129};
+    alumno_t Esteban = CrearAlumno("Esteban", "Lobo Silva", 43648129);
+    alumno_t Juan = CrearAlumno("Juan", "Pérez", 87654321);
 
     char salida[256];
-    int resultado = Serializar(&alumno, salida, sizeof(salida));
+    int resultado = Serializar(&Esteban, salida, sizeof(salida));
 
     if (resultado >= 0) {
         printf("Serializado: %s\n", salida);
