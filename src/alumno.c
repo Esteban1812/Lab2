@@ -24,20 +24,37 @@ SPDX-License-Identifier: MIT
 /* === Headers files inclusions ==================================================================================== */
 
 #include "alumno.h"
+#include "config.h"
 #include <stdio.h>
-#include <string.h>
+#include <stdbool.h>
 
 /* === Macros definitions ========================================================================================== */
 
+#ifndef ALUMNO_MAX_INSTANCIAS
+#define ALUMNO_MAX_INSTANCIAS 2 //!< Cantidad máxima de alumnos
+#endif
+
 /* === Private data type declarations ============================================================================== */
 
-struct Alumno{
-    char nombre[50];
-    char apellido[50];
-    int documento;
+struct Alumno {
+    char nombre[50];   //!< Nombre del alumno
+    char apellido[50]; //!< Apellido del alumno
+    int documento;     //!< Documento del alumno
+#ifndef USAR_MEMORIA_DINAMICA
+    bool ocupado; //!< Indica si la instancia está ocupada
+#endif
 };
 
 /* === Private function declarations =============================================================================== */
+
+/**
+ * @brief Crea una nueva instancia de alumno.
+ *
+ * @return alumno_t Puntero a la nueva instancia de alumno
+ */
+
+static alumno_t CrearInstancia();
+
 
 /**
  * @brief Serializa un campo de texto clave-valor en formato JSON.
@@ -65,8 +82,25 @@ static int SerializarNumero(const char * clave, int valor, char * salida);
 
 /* === Public variable definitions ================================================================================= */
 
+#ifndef USAR_MEMORIA_DINAMICA
+static struct Alumno instancias[ALUMNO_MAX_INSTANCIAS] = {0}; // Arreglo de instancias de alumnos
+#endif
+
 /* === Private function definitions ================================================================================ */
 
+#ifndef USAR_MEMORIA_DINAMICA
+static alumno_t CrearInstancia() {
+    alumno_t a = NULL;
+    for (int i = 0; i < ALUMNO_MAX_INSTANCIAS; i++) {
+        if (!instancias[i].ocupado) {     // Verifica si la instancia está libre
+            instancias[i].ocupado = true; // Marca la instancia como ocupada
+            a = &instancias[i];
+            break;
+        }
+    }
+    return a;
+}
+#endif
 static int SerializarTexto(const char * clave, const char * valor, char * salida) {
     return sprintf(salida, "\"%s\":\"%s\"", clave, valor);
 }
@@ -77,8 +111,12 @@ static int SerializarNumero(const char * clave, int valor, char * salida) {
 
 /* === Public function implementation ============================================================================== */
 
-alumno_t CrearAlumno(char * nombre, char * apellido, int documento){
+alumno_t CrearAlumno(char * nombre, char * apellido, int documento) {
+#ifndef USAR_MEMORIA_DINAMICA
     alumno_t a = malloc(sizeof(struct Alumno));
+#else
+    alumno_t a = CrearInstancia();
+#endif
     if (a != NULL) {
         a->documento = documento;
         strncpy(a->nombre, nombre, sizeof(a->nombre) - 1);
@@ -86,7 +124,6 @@ alumno_t CrearAlumno(char * nombre, char * apellido, int documento){
     }
     return a;
 }
-
 
 int Serializar(alumno_t a, char * salida, int tam) {
     char buffer[256];
