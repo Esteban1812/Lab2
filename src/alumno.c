@@ -27,6 +27,8 @@ SPDX-License-Identifier: MIT
 #include "config.h"
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
+#include <stdlib.h>
 
 /* === Macros definitions ========================================================================================== */
 
@@ -46,6 +48,7 @@ struct Alumno {
 };
 
 /* === Private function declarations =============================================================================== */
+#ifndef USAR_MEMORIA_DINAMICA
 
 /**
  * @brief Crea una nueva instancia de alumno.
@@ -53,9 +56,8 @@ struct Alumno {
  * @return alumno_t Puntero a la nueva instancia de alumno
  */
 
-static alumno_t CrearInstancia();
-
-
+static alumno_t CrearInstancia(void);
+#endif
 /**
  * @brief Serializa un campo de texto clave-valor en formato JSON.
  *
@@ -87,9 +89,9 @@ static struct Alumno instancias[ALUMNO_MAX_INSTANCIAS] = {0}; // Arreglo de inst
 #endif
 
 /* === Private function definitions ================================================================================ */
-
 #ifndef USAR_MEMORIA_DINAMICA
-static alumno_t CrearInstancia() {
+
+static alumno_t CrearInstancia(void) {
     alumno_t a = NULL;
     for (int i = 0; i < ALUMNO_MAX_INSTANCIAS; i++) {
         if (!instancias[i].ocupado) {     // Verifica si la instancia está libre
@@ -112,7 +114,7 @@ static int SerializarNumero(const char * clave, int valor, char * salida) {
 /* === Public function implementation ============================================================================== */
 
 alumno_t CrearAlumno(char * nombre, char * apellido, int documento) {
-#ifndef USAR_MEMORIA_DINAMICA
+#ifdef USAR_MEMORIA_DINAMICA
     alumno_t a = malloc(sizeof(struct Alumno));
 #else
     alumno_t a = CrearInstancia();

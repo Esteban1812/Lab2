@@ -42,11 +42,21 @@ SPDX-License-Identifier: MIT
 /* === Public function implementation ============================================================================== */
 
 int main(void) {
+    char salida[100];
+    int resultado;
+
     alumno_t Esteban = CrearAlumno("Esteban", "Lobo Silva", 43648129);
     alumno_t Juan = CrearAlumno("Juan", "Pérez", 87654321);
 
-    char salida[256];
-    int resultado = Serializar(&Esteban, salida, sizeof(salida));
+    resultado = Serializar(Esteban, salida, sizeof(salida));
+
+    if (resultado >= 0) {
+        printf("Serializado: %s\n", salida);
+    } else {
+        printf("Error: espacio insuficiente para serializar\n");
+    }
+
+    resultado = Serializar(Juan, salida, sizeof(salida));
 
     if (resultado >= 0) {
         printf("Serializado: %s\n", salida);
@@ -56,5 +66,5 @@ int main(void) {
 
     return 0;
 }
-    /* === End of documentation ========================================================================================
-     */
+/* === End of documentation ========================================================================================
+ */
